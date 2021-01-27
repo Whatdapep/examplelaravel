@@ -16,6 +16,13 @@
                         <img src={{$item->nphoto}} class="w-40 h40 " />
                         {{ $item->Question }}
                     </li>
+
+
+
+
+
+
+
                 @endforeach
             </ul>
     </main>
