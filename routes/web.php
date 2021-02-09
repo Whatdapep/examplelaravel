@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Line\CallbackController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,4 +26,9 @@ Route::get('/', function () {
 // require __DIR__.'/auth.php';
 
 
-Route::get('/home',[WelcomeController::class,'index']);
+Route::get('/home', [WelcomeController::class, 'index']);
+
+Route::group(['prefix' => 'Line', 'namespace' => 'LINE',], function () {
+    // Route::post('callback', 'CallbackController@index');
+    Route::post('/callback', [CallbackController::class, 'Webhook']);
+});
