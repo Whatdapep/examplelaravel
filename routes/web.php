@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('info.home');
 });
 
 // Route::get('/dashboard', function () {
@@ -26,7 +26,7 @@ Route::get('/', function () {
 // require __DIR__.'/auth.php';
 
 
-Route::get('/home', [WelcomeController::class, 'index']);
+// Route::get('/home', [WelcomeController::class, 'index']);
 
 Route::group(['prefix' => 'Line', 'namespace' => 'LINE',], function () {
     // Route::post('callback', 'CallbackController@index');
