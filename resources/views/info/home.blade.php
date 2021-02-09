@@ -12,3 +12,4 @@
     </main>
 
 </x-app-layout>
+%

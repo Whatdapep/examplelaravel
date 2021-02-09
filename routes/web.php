@@ -28,7 +28,7 @@ Route::get('/', function () {
 
 // Route::get('/home', [WelcomeController::class, 'index']);
 
-Route::group(['prefix' => 'Line', 'namespace' => 'LINE',], function () {
+Route::group(['prefix' => 'line', 'namespace' => 'LINE',], function () {
     // Route::post('callback', 'CallbackController@index');
     Route::post('/callback', [CallbackController::class, 'Webhook']);
 });
