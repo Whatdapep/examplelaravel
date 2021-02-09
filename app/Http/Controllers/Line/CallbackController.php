@@ -32,6 +32,7 @@ use LINE\LINEBot\Event\MessageEvent\UnknownMessage;
 class CallbackController extends Controller
 {
     //
+
     public function Webhook(Request $request)
     {
         $channelAccessToken = config('line.LINEBOT_CHANNEL_TOKEN');
