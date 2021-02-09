@@ -28,7 +28,11 @@ Route::get('/', function () {
 
 // Route::get('/home', [WelcomeController::class, 'index']);
 
-Route::group(['prefix' => 'line', 'namespace' => 'LINE',], function () {
+// Route::group(['namespace' => 'LINE',], function () {
     // Route::post('callback', 'CallbackController@index');
-    Route::post('/callback', [CallbackController::class, 'Webhook']);
-});
+    Route::post('users', function () {
+           return 'fsdfsdfsdf';
+    });
+    Route::post('post', [CallbackController::class, 'index']);
+    Route::post('callback', [CallbackController::class, 'Webhook']);
+// });

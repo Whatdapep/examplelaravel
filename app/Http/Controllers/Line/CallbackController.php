@@ -32,12 +32,17 @@ use LINE\LINEBot\Event\MessageEvent\UnknownMessage;
 class CallbackController extends Controller
 {
     //
-
+    public function index()
+    {
+        $channelAccessToken = config('line.LINEBOT_CHANNEL_TOKEN');
+        $channelSecret = config('line.LINEBOT_CHANNEL_SECRET');
+        dd($channelAccessToken,$channelSecret);
+    }
     public function Webhook(Request $request)
     {
         $channelAccessToken = config('line.LINEBOT_CHANNEL_TOKEN');
         $channelSecret = config('line.LINEBOT_CHANNEL_SECRET');
-
+        dd($channelAccessToken,$channelSecret);
         file_put_contents('LINE/logs/log.txt', json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE) . PHP_EOL, FILE_APPEND);
         $keep_log = json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE);
         // -------------------------------------------------------------------------------------------
