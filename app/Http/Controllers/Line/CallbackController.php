@@ -71,7 +71,7 @@ class CallbackController extends Controller
                 // file_put_contents('LINE/logs/log.txt', json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES), FILE_APPEND);
                 // file_put_contents('LINE/logs/log.txt', json_encode(array('replToken'=>$replToken) ,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES), FILE_APPEND);
                 if ($event instanceof TextMessage) {
-                    file_put_contents('LINE/logs/log.txt', json_encode(array('first' => '1', 'replToken' => $replToken, 'message_type' => $message_type, 'bot' => $bot, 'json' => $request->json()->all()), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), FILE_APPEND);
+                    // file_put_contents('LINE/logs/log.txt', json_encode(array('first' => '1', 'replToken' => $replToken, 'message_type' => $message_type, 'bot' => $bot, 'json' => $request->json()->all()), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), FILE_APPEND);
 
                     $replyText = $event->getText();
 
