@@ -89,7 +89,7 @@ class TextMessageHandler implements EventHandler
         $text = $this->textMessage->getText();
         $replyToken = $this->textMessage->getReplyToken();
         // $this->logger->info("Got text message from $replyToken: $text");
-        file_put_contents('LINE/logs/log.txt', json_encode(array('replToken'=>$replyToken,'text'=>$text) ,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES), FILE_APPEND);
+        // file_put_contents('LINE/logs/log.txt', json_encode(array('replToken'=>$replyToken,'text'=>$text) ,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES), FILE_APPEND);
         switch ($text) {
             // case 'profile':
             //     $userId = $this->textMessage->getUserId();
