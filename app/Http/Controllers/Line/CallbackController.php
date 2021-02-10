@@ -77,29 +77,32 @@ class CallbackController extends Controller
                 $replToken = $event->getReplyToken();
                 $userId = $event->getUserId();
                 // file_put_contents('LINE/logs/log.txt', json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES), FILE_APPEND);
-                file_put_contents('LINE/logs/log.txt', json_encode(array('replToken'=>$replToken) ,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES), FILE_APPEND);
+                // file_put_contents('LINE/logs/log.txt', json_encode(array('replToken'=>$replToken) ,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES), FILE_APPEND);
                 if ($event instanceof TextMessage) {
+                    file_put_contents('LINE/logs/log.txt', json_encode(array('replToken'=>$replToken,'message_type'=>$message_type) ,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES), FILE_APPEND);
                     $handler = new TextMessageHandler($bot, $logger, $request->json()->all(), $event);
                     $data = $event->getText();
-                } elseif ($event instanceof StickerMessage) {
-                    $handler = new StickerMessageHandler($bot, $logger, $event);
-                    $obj = array("packageId" => $event->getPackageId(), "stickerId" => $event->getStickerId());
-                    $data = json_encode($obj, JSON_UNESCAPED_UNICODE);
-                } elseif ($event instanceof LocationMessage) {
-                    $handler = new LocationMessageHandler($bot, $logger, $event);
-                    $obj = array(
-                        "title" => $event->getTitle(), "address" => $event->getAddress(),
-                        "latitude" => $event->getLatitude(), "longitude" => $event->getLongitude()
-                    );
-                    $data = json_encode($obj, JSON_UNESCAPED_UNICODE);
-                } elseif ($event instanceof ImageMessage) {
-                    $handler = new ImageMessageHandler($bot, $logger, $request->json()->all(), $event);
-                    $data = '';
-                } elseif ($event instanceof AudioMessage) {
-                    $handler = new AudioMessageHandler($bot, $logger, $request->json()->all(), $event);
-                } elseif ($event instanceof VideoMessage) {
-                    $handler = new VideoMessageHandler($bot, $logger, $request->json()->all(), $event);
-                } elseif ($event instanceof UnknownMessage) {
+                }
+                // elseif ($event instanceof StickerMessage) {
+                //     $handler = new StickerMessageHandler($bot, $logger, $event);
+                //     $obj = array("packageId" => $event->getPackageId(), "stickerId" => $event->getStickerId());
+                //     $data = json_encode($obj, JSON_UNESCAPED_UNICODE);
+                // } elseif ($event instanceof LocationMessage) {
+                //     $handler = new LocationMessageHandler($bot, $logger, $event);
+                //     $obj = array(
+                //         "title" => $event->getTitle(), "address" => $event->getAddress(),
+                //         "latitude" => $event->getLatitude(), "longitude" => $event->getLongitude()
+                //     );
+                //     $data = json_encode($obj, JSON_UNESCAPED_UNICODE);
+                // } elseif ($event instanceof ImageMessage) {
+                //     $handler = new ImageMessageHandler($bot, $logger, $request->json()->all(), $event);
+                //     $data = '';
+                // } elseif ($event instanceof AudioMessage) {
+                //     $handler = new AudioMessageHandler($bot, $logger, $request->json()->all(), $event);
+                // } elseif ($event instanceof VideoMessage) {
+                //     $handler = new VideoMessageHandler($bot, $logger, $request->json()->all(), $event);
+                // }
+                elseif ($event instanceof UnknownMessage) {
 
                     // $logger->info(sprintf(
                     //     'Unknown message type has come [message type: %s]',
