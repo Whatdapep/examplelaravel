@@ -42,27 +42,31 @@ class CallbackController extends Controller
         $channelAccessToken = config('line.LINEBOT_CHANNEL_TOKEN');
         $channelSecret = config('line.LINEBOT_CHANNEL_SECRET');
 
-        file_put_contents('LINE/logs/log.txt', json_encode($request->json()->all(),JSON_UNESCAPED_UNICODE) . PHP_EOL, FILE_APPEND);
+        file_put_contents('LINE/logs/log.txt', json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE) . PHP_EOL, FILE_APPEND);
         // $keep_log = json_encode($request->json()->all(),JSON_UNESCAPED_UNICODE);
         // -------------------------------------------------------------------------------------------
         /** @var \LINE\LINEBot $bot */
         $bot = Config::config();
-// --------------------------------------------------------------------------------
-        $signature = $request->header(HTTPHeader::LINE_SIGNATURE);
-// -------------------------------------------------------------------------------------
+        // --------------------------------------------------------------------------------
+        // $signature = $request->header(HTTPHeader::LINE_SIGNATURE);
+        $signature = $request->hasHeader(HTTPHeader::LINE_SIGNATURE);
+        if (empty($signature)) {
+            return Response('Bad Request', 400);
+        }
+        // -------------------------------------------------------------------------------------
 
         try {
             $events = $bot->parseEventRequest(json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE), $signature);
         } catch (InvalidSignatureException $e) {
-            return response('Invalid signature',400);
+            return response('Invalid signature', 400);
         } catch (InvalidEventRequestException $e) {
-            return response("Invalid event request",400);
+            return response("Invalid event request", 400);
         }
 
 
         foreach ($events as $event) {
 
-            $logger='';
+            $logger = '';
 
             if ($event instanceof MessageEvent) {
 
@@ -76,14 +80,15 @@ class CallbackController extends Controller
                     $data = $event->getText();
                 } elseif ($event instanceof StickerMessage) {
                     $handler = new StickerMessageHandler($bot, $logger, $event);
-                    $obj = array("packageId"=>$event->getPackageId(),"stickerId"=>$event->getStickerId());
-                    $data = json_encode($obj,JSON_UNESCAPED_UNICODE);
-
+                    $obj = array("packageId" => $event->getPackageId(), "stickerId" => $event->getStickerId());
+                    $data = json_encode($obj, JSON_UNESCAPED_UNICODE);
                 } elseif ($event instanceof LocationMessage) {
                     $handler = new LocationMessageHandler($bot, $logger, $event);
-                    $obj= array("title"=>$event->getTitle(),"address"=>$event->getAddress(),
-                    "latitude"=>$event->getLatitude(),"longitude"=>$event->getLongitude());
-                    $data = json_encode($obj,JSON_UNESCAPED_UNICODE);
+                    $obj = array(
+                        "title" => $event->getTitle(), "address" => $event->getAddress(),
+                        "latitude" => $event->getLatitude(), "longitude" => $event->getLongitude()
+                    );
+                    $data = json_encode($obj, JSON_UNESCAPED_UNICODE);
                 } elseif ($event instanceof ImageMessage) {
                     $handler = new ImageMessageHandler($bot, $logger, $request->json()->all(), $event);
                     $data = '';
@@ -107,7 +112,6 @@ class CallbackController extends Controller
                     // ));
                     continue;
                 }
-
             }
 
             // $save_logs = new line_active_logs;
@@ -120,11 +124,7 @@ class CallbackController extends Controller
             // $save_logs->save();
 
             $handler->handle();
-
         }
         return Response('Hello World', 200);
-
-
-
     }
 }
