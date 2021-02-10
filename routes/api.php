@@ -19,5 +19,5 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 Route::group(['prefix' => 'line',], function () {
-    Route::post('callback', [CallbackController::class, 'Webhook']);
+    Route::post('callback', [CallbackController::class, 'index']);
 });

@@ -1,85 +1,80 @@
 <?php
 
-namespace App\Http\Controllers\Line;
-
+namespace App\Http\Controllers\Api\LINE;
 
 use App\Http\Controllers\Controller;
 use App\LINE\Config;
-use App\LINE\EventHandler\MessageHandler\AudioMessageHandler;
-use App\LINE\EventHandler\MessageHandler\ImageMessageHandler;
-use App\LINE\EventHandler\MessageHandler\LocationMessageHandler;
-use App\LINE\EventHandler\MessageHandler\StickerMessageHandler;
-use App\LINE\EventHandler\MessageHandler\TextMessageHandler;
+use App\Line\EventHandler\MessageHandler\AudioMessageHandler;
+use App\Line\EventHandler\MessageHandler\ImageMessageHandler;
+use App\Line\EventHandler\MessageHandler\LocationMessageHandler;
+use App\Line\EventHandler\MessageHandler\StickerMessageHandler;
+use App\Line\EventHandler\MessageHandler\TextMessageHandler;
 use App\Line\EventHandler\MessageHandler\VideoMessageHandler;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 // use App\Line\linetiny as bot;
-
+use App\Line\LINE_CONFIG;
 // LINE SDK  -----------------------
 use LINE\LINEBot\Constant\HTTPHeader;
 use LINE\LINEBot\Event\MessageEvent;
+use LINE\LINEBot\Exception\InvalidEventRequestException;
+use LINE\LINEBot\Exception\InvalidSignatureException;
+// ---------------------------
+// use Slim\Http\Request as slim_request;
+// use Slim\Http\Response as slim_response;
+
+// use App\Model\Api\Line\line_active_logs;
 use LINE\LINEBot\Event\MessageEvent\AudioMessage;
 use LINE\LINEBot\Event\MessageEvent\ImageMessage;
 use LINE\LINEBot\Event\MessageEvent\LocationMessage;
 use LINE\LINEBot\Event\MessageEvent\StickerMessage;
-use LINE\LINEBot\Exception\InvalidEventRequestException;
-use LINE\LINEBot\Exception\InvalidSignatureException;
-
-// use LINE\LINEBot\Event\MessageEvent\AudioMessage;
-// use LINE\LINEBot\Event\MessageEvent\ImageMessage;
-// use LINE\LINEBot\Event\MessageEvent\LocationMessage;
-// use LINE\LINEBot\Event\MessageEvent\StickerMessage;
 use LINE\LINEBot\Event\MessageEvent\TextMessage;
 use LINE\LINEBot\Event\MessageEvent\UnknownMessage;
 use LINE\LINEBot\Event\MessageEvent\VideoMessage;
 
-// use LINE\LINEBot\Event\MessageEvent\VideoMessage;
-
 class CallbackController extends Controller
 {
     //
-    public function index()
+
+    public function index(Request $request)
+    // public function index(slim_request $req)
     {
         $channelAccessToken = config('line.LINEBOT_CHANNEL_TOKEN');
         $channelSecret = config('line.LINEBOT_CHANNEL_SECRET');
-        // dd($channelAccessToken,$channelSecret);
-    }
-    public function Webhook(Request $request)
-    {
-        $channelAccessToken = config('line.LINEBOT_CHANNEL_TOKEN');
-        $channelSecret = config('line.LINEBOT_CHANNEL_SECRET');
-        // dd($channelAccessToken,$channelSecret);
-        file_put_contents('LINE/logs/log.txt', json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE) . PHP_EOL, FILE_APPEND);
-        // $keep_log = json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE);
+
+        file_put_contents('LINE/logs/log.txt', json_encode($request->json()->all(),JSON_UNESCAPED_UNICODE) . PHP_EOL, FILE_APPEND);
+        // $keep_log = json_encode($request->json()->all(),JSON_UNESCAPED_UNICODE);
         // -------------------------------------------------------------------------------------------
         /** @var \LINE\LINEBot $bot */
-        $bot=Config::config();
-        // --------------------------------------------------------------------------------
+        $bot = Config::config();
+// --------------------------------------------------------------------------------
         $signature = $request->header(HTTPHeader::LINE_SIGNATURE);
-        // -------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------
+
         try {
             $events = $bot->parseEventRequest(json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE), $signature);
         } catch (InvalidSignatureException $e) {
-            return response('Invalid signature', 400);
+            return response('Invalid signature',400);
         } catch (InvalidEventRequestException $e) {
-            return response("Invalid event request", 400);
+            return response("Invalid event request",400);
         }
 
+
         foreach ($events as $event) {
-            $logger = '';
+
+            $logger='';
 
             if ($event instanceof MessageEvent) {
 
-                // $event_type = 'message';
-                // $message_type = $event->getMessageType();
-                // $replToken = $event->getReplyToken();
-                // $userId = $event->getUserId();
+                $event_type = 'message';
+                $message_type = $event->getMessageType();
+                $replToken = $event->getReplyToken();
+                $userId = $event->getUserId();
 
                 if ($event instanceof TextMessage) {
                     $handler = new TextMessageHandler($bot, $logger, $request->json()->all(), $event);
-                    // $data = $event->getText();
-                }
-                elseif ($event instanceof StickerMessage) {
+                    $data = $event->getText();
+                } elseif ($event instanceof StickerMessage) {
                     $handler = new StickerMessageHandler($bot, $logger, $event);
                     $obj = array("packageId"=>$event->getPackageId(),"stickerId"=>$event->getStickerId());
                     $data = json_encode($obj,JSON_UNESCAPED_UNICODE);
@@ -96,8 +91,7 @@ class CallbackController extends Controller
                     $handler = new AudioMessageHandler($bot, $logger, $request->json()->all(), $event);
                 } elseif ($event instanceof VideoMessage) {
                     $handler = new VideoMessageHandler($bot, $logger, $request->json()->all(), $event);
-                }
-                elseif ($event instanceof UnknownMessage) {
+                } elseif ($event instanceof UnknownMessage) {
 
                     // $logger->info(sprintf(
                     //     'Unknown message type has come [message type: %s]',
@@ -113,11 +107,24 @@ class CallbackController extends Controller
                     // ));
                     continue;
                 }
+
             }
 
+            // $save_logs = new line_active_logs;
+            // $save_logs->event_type = $event_type;
+            // $save_logs->replyToken = $replToken;
+            // $save_logs->userId = $userId;
+            // $save_logs->message_type = $message_type;
+            // $save_logs->message = $data;
+            // $save_logs->keep_logs = $keep_log;
+            // $save_logs->save();
 
             $handler->handle();
+
         }
         return Response('Hello World', 200);
+
+
+
     }
 }
