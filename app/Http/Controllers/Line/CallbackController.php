@@ -53,7 +53,7 @@ class CallbackController extends Controller
         if (empty($signature)) {
             return Response('Bad Request', 400);
         }
-        file_put_contents('LINE/logs/log.txt', json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE) . PHP_EOL, FILE_APPEND);
+        file_put_contents('LINE/logs/log.txt', json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE) . PHP_EOL .$signature, FILE_APPEND);
         // -------------------------------------------------------------------------------------
 
         try {
