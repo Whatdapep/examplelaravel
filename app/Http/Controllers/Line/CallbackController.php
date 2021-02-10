@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\LINE;
+namespace App\Http\Controllers\LINE;
 
 use App\Http\Controllers\Controller;
 use App\LINE\Config;
