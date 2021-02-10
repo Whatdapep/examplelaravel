@@ -36,13 +36,9 @@ use LINE\LINEBot\Event\MessageEvent\VideoMessage;
 class CallbackController extends Controller
 {
     public function index(Request $request)
-    // public function index(slim_request $req)
     {
-        // dd(new TextMessageHandler('','','',''));
         $channelAccessToken = config('line.LINEBOT_CHANNEL_TOKEN');
         $channelSecret = config('line.LINEBOT_CHANNEL_SECRET');
-        // file_put_contents('LINE/logs/log.txt', json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE) . PHP_EOL, FILE_APPEND);
-        // $keep_log = json_encode($request->json()->all(),JSON_UNESCAPED_UNICODE);
         // -------------------------------------------------------------------------------------------
         /** @var \LINE\LINEBot $bot */
         $bot = Config::config();
@@ -52,7 +48,6 @@ class CallbackController extends Controller
         if (empty($signature)) {
             return Response('Bad Request', 400);
         }
-        // file_put_contents('LINE/logs/log.txt', json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES), FILE_APPEND);
         // -------------------------------------------------------------------------------------
         try {
             $events = $bot->parseEventRequest(json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), $signature);
@@ -61,7 +56,6 @@ class CallbackController extends Controller
         } catch (InvalidEventRequestException $e) {
             return response("Invalid event request", 400);
         }
-        // file_put_contents('LINE/logs/log.txt', json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) . PHP_EOL, FILE_APPEND);
         foreach ($events as $event) {
             $logger = '';
             if ($event instanceof MessageEvent) {
@@ -69,39 +63,30 @@ class CallbackController extends Controller
                 $message_type = $event->getMessageType();
                 $replToken = $event->getReplyToken();
                 $userId = $event->getUserId();
-                // file_put_contents('LINE/logs/log.txt', json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES), FILE_APPEND);
-                // file_put_contents('LINE/logs/log.txt', json_encode(array('replToken'=>$replToken) ,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES), FILE_APPEND);
                 if ($event instanceof TextMessage) {
-
-
-                    // file_put_contents('LINE/logs/log.txt', json_encode(array('first' => '1', 'bot' => $bot, 'logger' => $logger, 'bot' => $bot, 'json' => $request->json()->all(),'event'=>$event), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), FILE_APPEND);
-                    // $replyText = $event->getText();
-
-                    // $resp = $bot->replyText($event->getReplyToken(), $replyText);
-                    // $handler = new TextMessageHandler($bot, $logger, $request->json()->all(), $event);
                     $handler = new TextMessageHandler($bot, $logger, $request->json()->all(), $event);
                     file_put_contents('LINE/logs/log.txt', json_encode(array('replToken' => $replToken, 'message_type' => $message_type, 'handler' => $handler), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), FILE_APPEND);
                     $data = $event->getText();
                 }
-                // elseif ($event instanceof StickerMessage) {
-                //     $handler = new StickerMessageHandler($bot, $logger, $event);
-                //     $obj = array("packageId" => $event->getPackageId(), "stickerId" => $event->getStickerId());
-                //     $data = json_encode($obj, JSON_UNESCAPED_UNICODE);
-                // } elseif ($event instanceof LocationMessage) {
-                //     $handler = new LocationMessageHandler($bot, $logger, $event);
-                //     $obj = array(
-                //         "title" => $event->getTitle(), "address" => $event->getAddress(),
-                //         "latitude" => $event->getLatitude(), "longitude" => $event->getLongitude()
-                //     );
-                //     $data = json_encode($obj, JSON_UNESCAPED_UNICODE);
-                // } elseif ($event instanceof ImageMessage) {
-                //     $handler = new ImageMessageHandler($bot, $logger, $request->json()->all(), $event);
-                //     $data = '';
-                // } elseif ($event instanceof AudioMessage) {
-                //     $handler = new AudioMessageHandler($bot, $logger, $request->json()->all(), $event);
-                // } elseif ($event instanceof VideoMessage) {
-                //     $handler = new VideoMessageHandler($bot, $logger, $request->json()->all(), $event);
-                // }
+                elseif ($event instanceof StickerMessage) {
+                    $handler = new StickerMessageHandler($bot, $logger, $event);
+                    $obj = array("packageId" => $event->getPackageId(), "stickerId" => $event->getStickerId());
+                    $data = json_encode($obj, JSON_UNESCAPED_UNICODE);
+                } elseif ($event instanceof LocationMessage) {
+                    $handler = new LocationMessageHandler($bot, $logger, $event);
+                    $obj = array(
+                        "title" => $event->getTitle(), "address" => $event->getAddress(),
+                        "latitude" => $event->getLatitude(), "longitude" => $event->getLongitude()
+                    );
+                    $data = json_encode($obj, JSON_UNESCAPED_UNICODE);
+                } elseif ($event instanceof ImageMessage) {
+                    $handler = new ImageMessageHandler($bot, $logger, $request->json()->all(), $event);
+                    $data = '';
+                } elseif ($event instanceof AudioMessage) {
+                    $handler = new AudioMessageHandler($bot, $logger, $request->json()->all(), $event);
+                } elseif ($event instanceof VideoMessage) {
+                    $handler = new VideoMessageHandler($bot, $logger, $request->json()->all(), $event);
+                }
                 elseif ($event instanceof UnknownMessage) {
                     // $logger->info(sprintf(
                     //     'Unknown message type has come [message type: %s]',
