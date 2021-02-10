@@ -88,7 +88,7 @@ class TextMessageHandler implements EventHandler
     {
         $text = $this->textMessage->getText();
         $replyToken = $this->textMessage->getReplyToken();
-        $this->logger->info("Got text message from $replyToken: $text");
+        // $this->logger->info("Got text message from $replyToken: $text");
 
         switch ($text) {
             case 'profile':
@@ -263,7 +263,7 @@ class TextMessageHandler implements EventHandler
      */
     private function echoBack($replyToken, $text)
     {
-        $this->logger->info("Returns echo message $replyToken: $text");
+        // $this->logger->info("Returns echo message $replyToken: $text");
         $this->bot->replyText($replyToken, $text);
     }
 
