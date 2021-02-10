@@ -53,7 +53,7 @@ class CallbackController extends Controller
         if (empty($signature)) {
             return Response('Bad Request', 400);
         }
-        file_put_contents('LINE/logs/log.txt', json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES), FILE_APPEND);
+        // file_put_contents('LINE/logs/log.txt', json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES), FILE_APPEND);
         // -------------------------------------------------------------------------------------
 
         try {
@@ -76,7 +76,7 @@ class CallbackController extends Controller
                 $message_type = $event->getMessageType();
                 $replToken = $event->getReplyToken();
                 $userId = $event->getUserId();
-
+                file_put_contents('LINE/logs/log.txt', json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES), FILE_APPEND);
                 if ($event instanceof TextMessage) {
                     $handler = new TextMessageHandler($bot, $logger, $request->json()->all(), $event);
                     $data = $event->getText();
