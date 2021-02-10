@@ -3,7 +3,7 @@
 
 namespace App\LINE;
 
-use App\Line\Setting;
+use App\LINE\Setting;
 use LINE\LINEBot;
 use LINE\LINEBot\HTTPClient\CurlHTTPClient;
 

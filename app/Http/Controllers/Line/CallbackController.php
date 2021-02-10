@@ -14,8 +14,7 @@ use App\LINE\EventHandler\MessageHandler\TextMessageHandler;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 // use App\Line\linetiny as bot;
-use App\LINE\LINE_CONFIG;
-use App\LINE\Setting;
+
 // LINE SDK  -----------------------
 use LINE\LINEBot\Constant\HTTPHeader;
 use LINE\LINEBot\Event\MessageEvent;
