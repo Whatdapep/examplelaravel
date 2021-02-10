@@ -38,7 +38,7 @@ class CallbackController extends Controller
     public function index(Request $request)
     // public function index(slim_request $req)
     {
-        dd(new TextMessageHandler('','','',''));
+        // dd(new TextMessageHandler('','','',''));
         $channelAccessToken = config('line.LINEBOT_CHANNEL_TOKEN');
         $channelSecret = config('line.LINEBOT_CHANNEL_SECRET');
         // file_put_contents('LINE/logs/log.txt', json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE) . PHP_EOL, FILE_APPEND);
@@ -74,10 +74,10 @@ class CallbackController extends Controller
                 if ($event instanceof TextMessage) {
 
 
-                    file_put_contents('LINE/logs/log.txt', json_encode(array('first' => '1', 'bot' => $bot, 'logger' => $logger, 'bot' => $bot, 'json' => $request->json()->all(),'event'=>$event), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), FILE_APPEND);
-                    $replyText = $event->getText();
+                    // file_put_contents('LINE/logs/log.txt', json_encode(array('first' => '1', 'bot' => $bot, 'logger' => $logger, 'bot' => $bot, 'json' => $request->json()->all(),'event'=>$event), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), FILE_APPEND);
+                    // $replyText = $event->getText();
 
-                    $resp = $bot->replyText($event->getReplyToken(), $replyText);
+                    // $resp = $bot->replyText($event->getReplyToken(), $replyText);
                     // $handler = new TextMessageHandler($bot, $logger, $request->json()->all(), $event);
                     $handler = new TextMessageHandler($bot, $logger, $request->json()->all(), $event);
                     file_put_contents('LINE/logs/log.txt', json_encode(array('replToken' => $replToken, 'message_type' => $message_type, 'handler' => $handler), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), FILE_APPEND);
@@ -127,7 +127,7 @@ class CallbackController extends Controller
             // $save_logs->keep_logs = $keep_log;
             // $save_logs->save();
 
-            // $handler->handle();
+            $handler->handle();
         }
         return Response('Hello World', 200);
     }
