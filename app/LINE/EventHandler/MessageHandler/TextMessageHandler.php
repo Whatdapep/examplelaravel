@@ -36,9 +36,10 @@ use LINE\LINEBot\TemplateActionBuilder\PostbackTemplateActionBuilder;
 use LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder;
 use LINE\LINEBot\Event\MessageEvent\TextMessage;
 use App\LINE\EventHandler;
+use App\LINE\EventHandler\MessageHandler\Util\UrlBuilder;
 use LINE\LINEBot\KitchenSink\EventHandler\MessageHandler\Flex\FlexSampleRestaurant;
 use LINE\LINEBot\KitchenSink\EventHandler\MessageHandler\Flex\FlexSampleShopping;
-use LINE\LINEBot\KitchenSink\EventHandler\MessageHandler\Util\UrlBuilder;
+// use LINE\LINEBot\KitchenSink\EventHandler\MessageHandler\Util\UrlBuilder;
 use LINE\LINEBot\MessageBuilder\Imagemap\BaseSizeBuilder;
 use LINE\LINEBot\MessageBuilder\Imagemap\VideoBuilder;
 use LINE\LINEBot\MessageBuilder\Imagemap\ExternalLinkBuilder;
@@ -91,6 +92,13 @@ class TextMessageHandler implements EventHandler
         // $this->logger->info("Got text message from $replyToken: $text");
 
         switch ($text) {
+            case 'ทั่วไป':
+                $messageTemplate = new TextMessageBuilder(
+                    'ท่านกดทั่วไป',
+                );
+                $this->bot->replyMessage($replyToken, $messageTemplate);
+
+                break;
             case 'profile':
                 $userId = $this->textMessage->getUserId();
                 $this->sendProfile($replyToken, $userId);
