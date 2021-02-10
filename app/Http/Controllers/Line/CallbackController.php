@@ -23,6 +23,7 @@ use LINE\LINEBot\Exception\InvalidSignatureException;
 // use Slim\Http\Request as slim_request;
 // use Slim\Http\Response as slim_response;
 
+
 // use App\Model\Api\Line\line_active_logs;
 use LINE\LINEBot\Event\MessageEvent\AudioMessage;
 use LINE\LINEBot\Event\MessageEvent\ImageMessage;
@@ -34,14 +35,11 @@ use LINE\LINEBot\Event\MessageEvent\VideoMessage;
 
 class CallbackController extends Controller
 {
-    //
-
     public function index(Request $request)
     // public function index(slim_request $req)
     {
         $channelAccessToken = config('line.LINEBOT_CHANNEL_TOKEN');
         $channelSecret = config('line.LINEBOT_CHANNEL_SECRET');
-
         // file_put_contents('LINE/logs/log.txt', json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE) . PHP_EOL, FILE_APPEND);
         // $keep_log = json_encode($request->json()->all(),JSON_UNESCAPED_UNICODE);
         // -------------------------------------------------------------------------------------------
@@ -55,7 +53,6 @@ class CallbackController extends Controller
         }
         // file_put_contents('LINE/logs/log.txt', json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES), FILE_APPEND);
         // -------------------------------------------------------------------------------------
-
         try {
             $events = $bot->parseEventRequest(json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), $signature);
         } catch (InvalidSignatureException $e) {
@@ -63,15 +60,10 @@ class CallbackController extends Controller
         } catch (InvalidEventRequestException $e) {
             return response("Invalid event request", 400);
         }
-
-
         // file_put_contents('LINE/logs/log.txt', json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) . PHP_EOL, FILE_APPEND);
         foreach ($events as $event) {
-
             $logger = '';
-
             if ($event instanceof MessageEvent) {
-
                 $event_type = 'message';
                 $message_type = $event->getMessageType();
                 $replToken = $event->getReplyToken();
@@ -80,7 +72,11 @@ class CallbackController extends Controller
                 // file_put_contents('LINE/logs/log.txt', json_encode(array('replToken'=>$replToken) ,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES), FILE_APPEND);
                 if ($event instanceof TextMessage) {
                     file_put_contents('LINE/logs/log.txt', json_encode(array('first' => '1', 'replToken' => $replToken, 'message_type' => $message_type, 'bot' => $bot, 'json' => $request->json()->all()), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), FILE_APPEND);
-                    $handler = new TextMessageHandler($bot, $logger, $request->json()->all(), $event);
+
+                    $replyText = $event->getText();
+
+                    $resp = $bot->replyText($event->getReplyToken(), $replyText);
+                    // $handler = new TextMessageHandler($bot, $logger, $request->json()->all(), $event);
                     file_put_contents('LINE/logs/log.txt', json_encode(array('replToken' => $replToken, 'message_type' => $message_type, 'handler' => $handler), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), FILE_APPEND);
                     $data = $event->getText();
                 }
@@ -104,7 +100,6 @@ class CallbackController extends Controller
                 //     $handler = new VideoMessageHandler($bot, $logger, $request->json()->all(), $event);
                 // }
                 elseif ($event instanceof UnknownMessage) {
-
                     // $logger->info(sprintf(
                     //     'Unknown message type has come [message type: %s]',
                     //     $event->getMessageType()
@@ -120,7 +115,6 @@ class CallbackController extends Controller
                     continue;
                 }
             }
-
             // $save_logs = new line_active_logs;
             // $save_logs->event_type = $event_type;
             // $save_logs->replyToken = $replToken;
@@ -130,7 +124,7 @@ class CallbackController extends Controller
             // $save_logs->keep_logs = $keep_log;
             // $save_logs->save();
 
-            $handler->handle();
+            // $handler->handle();
         }
         return Response('Hello World', 200);
     }

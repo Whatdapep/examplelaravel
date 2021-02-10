@@ -88,10 +88,11 @@ class TextMessageHandler implements EventHandler
     {
         $text = $this->textMessage->getText();
         $replyToken = $this->textMessage->getReplyToken();
-        // file_put_contents('LINE/logs/log.txt', json_encode(array('replToken' => $replyToken, 'text' => $text, 'req' => $this->req, ), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), FILE_APPEND);
 
+        // file_put_contents('LINE/logs/log.txt', json_encode(array('replToken' => $replyToken, 'text' => $text, 'req' => $this->req, ), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), FILE_APPEND);
         // $this->logger->info("Got text message from $replyToken: $text");
         // file_put_contents('LINE/logs/log.txt', json_encode(array('replToken'=>$replyToken,'text'=>$text) ,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES), FILE_APPEND);
+
         switch ($text) {
                 // case 'profile':
                 //     $userId = $this->textMessage->getUserId();
@@ -253,12 +254,10 @@ class TextMessageHandler implements EventHandler
                 //     $this->bot->replyMessage($replyToken, $messageTemplate);
                 //     break;
             default:
-
                 $this->echoBack($replyToken, $text);
                 break;
         }
     }
-
     /**
      * @param string $replyToken
      * @param string $text
@@ -269,7 +268,6 @@ class TextMessageHandler implements EventHandler
         // $this->logger->info("Returns echo message $replyToken: $text");
         $this->bot->replyText($replyToken, $text);
     }
-
     /**
      * @param $replyToken
      * @param $userId
@@ -281,13 +279,11 @@ class TextMessageHandler implements EventHandler
             $this->bot->replyText($replyToken, "Bot can't use profile API without user ID");
             return;
         }
-
         $response = $this->bot->getProfile($userId);
         if (!$response->isSucceeded()) {
             $this->bot->replyText($replyToken, $response->getRawBody());
             return;
         }
-
         $profile = $response->getJSONDecodedBody();
         $this->bot->replyText(
             $replyToken,
