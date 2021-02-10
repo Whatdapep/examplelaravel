@@ -42,21 +42,22 @@ class CallbackController extends Controller
         $channelAccessToken = config('line.LINEBOT_CHANNEL_TOKEN');
         $channelSecret = config('line.LINEBOT_CHANNEL_SECRET');
 
-        file_put_contents('LINE/logs/log.txt', json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE) . PHP_EOL, FILE_APPEND);
+        // file_put_contents('LINE/logs/log.txt', json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE) . PHP_EOL, FILE_APPEND);
         // $keep_log = json_encode($request->json()->all(),JSON_UNESCAPED_UNICODE);
         // -------------------------------------------------------------------------------------------
         /** @var \LINE\LINEBot $bot */
         $bot = Config::config();
         // --------------------------------------------------------------------------------
-        // $signature = $request->header(HTTPHeader::LINE_SIGNATURE);
-        $signature = $request->hasHeader(HTTPHeader::LINE_SIGNATURE);
+        $signature = $request->header(HTTPHeader::LINE_SIGNATURE);
+        // $signature = $request->hasHeader(HTTPHeader::LINE_SIGNATURE);
         if (empty($signature)) {
             return Response('Bad Request', 400);
         }
+        file_put_contents('LINE/logs/log.txt', json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE) . PHP_EOL, FILE_APPEND);
         // -------------------------------------------------------------------------------------
 
         try {
-            $events = $bot->parseEventRequest(json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE), $signature);
+            $events = $bot->parseEventRequest(json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE), $signature[0]);
         } catch (InvalidSignatureException $e) {
             return response('Invalid signature', 400);
         } catch (InvalidEventRequestException $e) {
@@ -64,6 +65,7 @@ class CallbackController extends Controller
         }
 
 
+        file_put_contents('LINE/logs/log.txt', json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE) . PHP_EOL, FILE_APPEND);
         foreach ($events as $event) {
 
             $logger = '';
