@@ -53,11 +53,11 @@ class CallbackController extends Controller
         if (empty($signature)) {
             return Response('Bad Request', 400);
         }
-        file_put_contents('LINE/logs/log.txt', json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE) . PHP_EOL .$signature, FILE_APPEND);
+        file_put_contents('LINE/logs/log.txt', $request->json()->all(), FILE_APPEND);
         // -------------------------------------------------------------------------------------
 
         try {
-            $events = $bot->parseEventRequest(json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE), $signature[0]);
+            $events = $bot->parseEventRequest(json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE), $signature);
         } catch (InvalidSignatureException $e) {
             return response('Invalid signature', 400);
         } catch (InvalidEventRequestException $e) {
