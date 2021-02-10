@@ -34,5 +34,5 @@ Route::get('/', function () {
            return 'fsdfsdfsdf';
     });
     Route::post('post', [CallbackController::class, 'index']);
-    Route::post('callback', [CallbackController::class, 'Webhook']);
+    // Route::post('callback', [CallbackController::class, 'Webhook']);
 // });

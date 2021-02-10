@@ -1,15 +1,15 @@
 <?php
 
 
-namespace App\Line;
+namespace App\LINE;
 
 use App\Line\Setting;
 use LINE\LINEBot;
 use LINE\LINEBot\HTTPClient\CurlHTTPClient;
 
-class LINE_CONFIG {
+// class LINE_CONFIG {
 
-
+    class Config {
 
     // public function __construct()
     // {
@@ -19,7 +19,7 @@ class LINE_CONFIG {
     public static function config()
     {
         $setting = Setting::getSetting();
-
+        // dd($setting);
         $settings = $setting['settings'];
         $channelSecret = $settings['bot']['channelSecret'];
             $channelToken = $settings['bot']['channelToken'];

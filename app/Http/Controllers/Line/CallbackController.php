@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Line;
 
 
 use App\Http\Controllers\Controller;
+use App\LINE\Config;
 // use App\LINE\EventHandler\MessageHandler\AudioMessageHandler;
 // use App\LINE\EventHandler\MessageHandler\ImageMessageHandler;
 // use App\LINE\EventHandler\MessageHandler\LocationMessageHandler;
@@ -13,7 +14,8 @@ use App\LINE\EventHandler\MessageHandler\TextMessageHandler;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 // use App\Line\linetiny as bot;
-use App\Line\LINE_CONFIG;
+use App\LINE\LINE_CONFIG;
+use App\LINE\Setting;
 // LINE SDK  -----------------------
 use LINE\LINEBot\Constant\HTTPHeader;
 use LINE\LINEBot\Event\MessageEvent;
@@ -36,18 +38,18 @@ class CallbackController extends Controller
     {
         $channelAccessToken = config('line.LINEBOT_CHANNEL_TOKEN');
         $channelSecret = config('line.LINEBOT_CHANNEL_SECRET');
-        dd($channelAccessToken,$channelSecret);
+        // dd($channelAccessToken,$channelSecret);
     }
     public function Webhook(Request $request)
     {
         $channelAccessToken = config('line.LINEBOT_CHANNEL_TOKEN');
         $channelSecret = config('line.LINEBOT_CHANNEL_SECRET');
-        dd($channelAccessToken,$channelSecret);
+        // dd($channelAccessToken,$channelSecret);
         file_put_contents('LINE/logs/log.txt', json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE) . PHP_EOL, FILE_APPEND);
-        $keep_log = json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE);
+        // $keep_log = json_encode($request->json()->all(), JSON_UNESCAPED_UNICODE);
         // -------------------------------------------------------------------------------------------
         /** @var \LINE\LINEBot $bot */
-        $bot = LINE_CONFIG::config();
+        $bot=Config::config();
         // --------------------------------------------------------------------------------
         $signature = $request->header(HTTPHeader::LINE_SIGNATURE);
         // -------------------------------------------------------------------------------------

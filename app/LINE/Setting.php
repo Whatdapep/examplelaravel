@@ -17,7 +17,7 @@
  */
 
 // namespace LINE\LINEBot\KitchenSink;
-namespace App\Line;
+namespace App\LINE;
 
 class Setting
 {

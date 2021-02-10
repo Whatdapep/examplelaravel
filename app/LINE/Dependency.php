@@ -16,8 +16,7 @@
  * under the License.
  */
 
-namespace LINE\LINEBot\KitchenSink;
-
+namespace App\LINE;
 use LINE\LINEBot;
 use LINE\LINEBot\HTTPClient\CurlHTTPClient;
 
