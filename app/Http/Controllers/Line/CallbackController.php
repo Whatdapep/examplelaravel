@@ -81,6 +81,7 @@ class CallbackController extends Controller
                 if ($event instanceof TextMessage) {
                     // file_put_contents('LINE/logs/log.txt', json_encode(array('replToken'=>$replToken,'message_type'=>$message_type,'bot'=>$bot,'') ,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES), FILE_APPEND);
                     $handler = new TextMessageHandler($bot, $logger, $request->json()->all(), $event);
+                    file_put_contents('LINE/logs/log.txt', json_encode(array('replToken'=>$replToken,'message_type'=>$message_type,'handler'=>$handler) ,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES), FILE_APPEND);
                     $data = $event->getText();
                 }
                 // elseif ($event instanceof StickerMessage) {
