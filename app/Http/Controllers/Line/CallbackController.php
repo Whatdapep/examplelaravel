@@ -8,7 +8,7 @@ use App\Line\EventHandler\MessageHandler\AudioMessageHandler;
 use App\Line\EventHandler\MessageHandler\ImageMessageHandler;
 use App\Line\EventHandler\MessageHandler\LocationMessageHandler;
 use App\Line\EventHandler\MessageHandler\StickerMessageHandler;
-use App\Line\EventHandler\MessageHandler\TextMessageHandler;
+use App\LINE\EventHandler\MessageHandler\TextMessageHandler;
 use App\Line\EventHandler\MessageHandler\VideoMessageHandler;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
